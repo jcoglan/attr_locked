@@ -1,5 +1,5 @@
 module ActiveRecord #:nodoc:
-  class Base #:nodoc:
+  class Base
     class << self
       def attr_locked(*attributes)
         write_inheritable_array("attr_locked", attributes - (locked_attributes || []))

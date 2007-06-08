@@ -1,4 +1,60 @@
-AttrLocked
-==========
+== AttrLocked
 
-Description goes here
++AttrLocked+ is a tiny little Rails plugin that provides extra security for your +ActiveRecord+ models. It lets you specify, at the model level, that certain model attributes should never be allowed to change. Perfect for usernames or financial record-keeping.
+
+
+=== In the model
+
+Let's take an example: your application has users, who each have a username. Once created, that username should never change. +AttrLocked+ lets you specify this with a single line:
+
+  class User < ActiveRecord::Base
+    attr_locked :username
+  end
+
+Now, when you create a new +User+, you can of course assign it a username. But once the record has been saved (specifically, when <tt>new_record?</tt> returns false) you cannot reassign it. This is best illustrated with a little code:
+
+  foo = User.new(:username => 'Bob')
+  foo.save
+  
+  bob = User.find_by_username('Bob')
+  bob.username
+  #=> "Bob"
+  bob.username = 'Mike'
+  #=> "Mike"
+  bob.username
+  #=> "Bob"
+  
+  bob.update_attribute(:username, 'Freddie')
+  #=> false
+  bob.username
+  #=> "Bob"
+
+So, you are unable to assign using <tt>username=</tt> (or indeed using <tt>attributes=</tt>). +save+, +update_attributes+ and <tt>attributes=</tt> will silently ignore the locked attributes, just as they do for +attr_protected+. +update_attribute+ will return +false+ if you use it with a locked attribute.
+
+
+=== In the view
+
+To make sure people don't waste their time filling out forms, any form input that's linked to a locked attribute will be disabled automatically, unless you're creating a new record. So, you don't need to go around putting <tt>:disabled => !object.new_record?</tt> everywhere. Helpful, no?
+
+
+=== License
+
+Copyright (c) 2007 James Coglan
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
