@@ -17,10 +17,22 @@ module ActiveRecord #:nodoc:
           end
         end
       end
+      
+      def has_locked_attribute?(attr_name)
+        locked_attributes.to_a.collect(&:to_s).include?(attr_name.to_s)
+      end
     end
     
+    define_method('[]=_with_attribute_locking') do |attr_name, value|
+      if !self.class.has_locked_attribute?(attr_name) or new_record?
+        write_attribute(attr_name, value)
+      end
+    end
+    alias_method('[]=_without_attribute_locking', '[]=')
+    alias_method('[]=', '[]=_with_attribute_locking')
+    
     def update_attribute_with_attribute_locking(name, value)
-      if self.class.locked_attributes.to_a.collect(&:to_s).include?(name.to_s)
+      if self.class.has_locked_attribute?(name)
         return false
       else
         update_attribute_without_attribute_locking(name, value)

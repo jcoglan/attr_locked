@@ -4,7 +4,7 @@ module ActionView #:nodoc:
     
       def attribute_locked
         object.is_a?(ActiveRecord::Base) and
-            object.class.locked_attributes.to_a.collect(&:to_s).include?(method_name.to_s) and
+            object.class.has_locked_attribute?(method_name) and
             !object.new_record?
       end
       
