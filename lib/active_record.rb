@@ -13,7 +13,7 @@ module ActiveRecord #:nodoc:
       def define_locked_write_methods
         locked_attributes.to_a.collect(&:to_s).each do |attr|
           define_method("#{attr}=") do |value|
-            @attributes[attr] = value if new_record?
+            write_attribute(attr, value) if new_record?
           end
         end
       end
