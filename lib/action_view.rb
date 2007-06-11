@@ -3,7 +3,7 @@ module ActionView #:nodoc:
     class InstanceTag
     
       def attribute_locked?
-        object.is_a?(ActiveRecord::Base) and object.attribute_locked?
+        object.is_a?(ActiveRecord::Base) and object.attribute_locked?(method_name)
       end
       
       def tag_with_attribute_locking(name, options = nil)
