@@ -1,6 +1,6 @@
 == AttrLocked
 
-+AttrLocked+ is a tiny little Rails plugin that provides extra security for your +ActiveRecord+ models. It lets you specify, at the model level, that certain model attributes should never be allowed to change. Perfect for usernames or financial record-keeping.
++AttrLocked+ is a little Rails plugin that provides extra security for your +ActiveRecord+ models. It lets you specify, at the model level, that certain model attributes should never be allowed to change. Perfect for usernames or financial record-keeping.
 
 
 === In the model
@@ -35,6 +35,17 @@ So, you are unable to assign using <tt>username=</tt> (or indeed using <tt>attri
 === In the view
 
 To make sure people don't waste their time filling out forms, any form input that's linked to a locked attribute will be disabled automatically, unless you're creating a new record. So, you don't need to go around putting <tt>:disabled => !object.new_record?</tt> everywhere. Helpful, no?
+
+
+=== Locking whole tables
+
+You might have some database tables that are read-only. For example, there might be a table that stores a set of third-party geographic data that's used by your application. You can safeguard such tabled against changes by using:
+
+  class Location < ActiveRecord::Base
+    table_locked
+  end
+
+With that in place, you cannot modify the properties of any +Location+ instances, even new ones not yet saved to the database. You cannot save, create, update or destroy (or +delete_all+) any records from the table.
 
 
 === License

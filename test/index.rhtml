@@ -1,4 +1,38 @@
+<h1>Lock instance</h1>
+
 <% form_for(:lock) do |form| %>
+  <div><%= form.text_field(:name) %></div>
+  <div><%= form.text_area(:description, :rows => 6) %></div>
+  <div><%= form.date_select(:date) %></div>
+  <div><%= form.check_box(:flag) %></div>
+  <div><%= form.radio_button(:flag, 'foo') %></div>
+  <div><%= form.radio_button(:flag, 'bar') %></div>
+  <div><%= form.text_field(:unlocked) %></div>
+  <div><%= form.collection_select(:name, Lock.find(:all), :name, :date) %></div>
+  <div><%= form.select(:name, [[1,1], [2,2], [3,3]]) %></div>
+  <div><%= form.country_select(:description) %>
+<% end %>
+
+
+<h1>TableLock instance</h1>
+
+<% form_for(:table_lock) do |form| %>
+  <div><%= form.text_field(:name) %></div>
+  <div><%= form.text_area(:description, :rows => 6) %></div>
+  <div><%= form.date_select(:date) %></div>
+  <div><%= form.check_box(:flag) %></div>
+  <div><%= form.radio_button(:flag, 'foo') %></div>
+  <div><%= form.radio_button(:flag, 'bar') %></div>
+  <div><%= form.text_field(:unlocked) %></div>
+  <div><%= form.collection_select(:name, Lock.find(:all), :name, :date) %></div>
+  <div><%= form.select(:name, [[1,1], [2,2], [3,3]]) %></div>
+  <div><%= form.country_select(:description) %>
+<% end %>
+
+
+<h1>Unlocked instance</h1>
+
+<% form_for(:unlocked) do |form| %>
   <div><%= form.text_field(:name) %></div>
   <div><%= form.text_area(:description, :rows => 6) %></div>
   <div><%= form.date_select(:date) %></div>

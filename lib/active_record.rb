@@ -7,24 +7,36 @@ module ActiveRecord #:nodoc:
       end
       
       def locked_attributes
-        read_inheritable_attribute("attr_locked")
+        (table_read_only? ? self.new.attribute_names :
+            read_inheritable_attribute("attr_locked")).to_a.collect(&:to_s)
       end
       
       def define_locked_write_methods
-        locked_attributes.to_a.collect(&:to_s).each do |attr|
+        locked_attributes.each do |attr|
           define_method("#{attr}=") do |value|
-            write_attribute(attr, value) if new_record?
+            write_attribute(attr, value) if new_record? and !self.class.table_read_only?
           end
         end
       end
       
       def has_locked_attribute?(attr_name)
-        locked_attributes.to_a.collect(&:to_s).include?(attr_name.to_s)
+        locked_attributes.include?(attr_name.to_s)
+      end
+      
+      def table_locked
+        write_inheritable_attribute("read_only_table", true)
+        define_locked_write_methods
+        def self.delete_all; return false; end
+      end
+      
+      def table_read_only?
+        read_inheritable_attribute("read_only_table") ? true : false
       end
     end
     
     define_method('[]=_with_attribute_locking') do |attr_name, value|
-      if !self.class.has_locked_attribute?(attr_name) or new_record?
+      if !self.class.table_read_only? and
+          (!self.class.has_locked_attribute?(attr_name) or new_record?)
         write_attribute(attr_name, value)
       end
     end
@@ -40,5 +52,12 @@ module ActiveRecord #:nodoc:
     end
     alias_method(:update_attribute_without_attribute_locking, :update_attribute)
     alias_method(:update_attribute, :update_attribute_with_attribute_locking)
+    
+    before_save :check_table_lock
+    before_destroy :check_table_lock
+    def check_table_lock
+      return false if self.class.table_read_only?
+    end
+    
   end
 end
