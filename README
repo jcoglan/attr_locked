@@ -39,7 +39,7 @@ To make sure people don't waste their time filling out forms, any form input tha
 
 === Locking whole tables
 
-You might have some database tables that are read-only. For example, there might be a table that stores a set of third-party geographic data that's used by your application. You can safeguard such tabled against changes by using:
+You might have some database tables that are read-only. For example, there might be a table that stores a set of third-party geographic data that's used by your application. You can safeguard such tables against changes by using:
 
   class Location < ActiveRecord::Base
     table_locked
