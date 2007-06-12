@@ -48,6 +48,37 @@ You might have some database tables that are read-only. For example, there might
 With that in place, you cannot modify the properties of any +Location+ instances, even new ones not yet saved to the database. You cannot save, create, update or destroy (or +delete_all+) any records from the table.
 
 
+=== Associations
+
+You needn't worry that locking records or tables means they cannot be associated with anything. Using our geographic data example, we could have:
+
+  # This table is for reference only
+  class Town < ActiveRecord::Base
+    table_locked
+    has_many :users
+  end
+  
+  class User < ActiveRecord::Base
+    attr_locked :username
+    belongs_to :town
+  end
+
+With this setup, we can still modify associations as usual:
+
+  town = Town.find(:first)
+  user = User.find(:first)
+  
+  # Saves immediately
+  town.users = [user]
+  
+  # As does this
+  town.users << user
+  
+  # This works too
+  user.town = town
+  user.save
+
+
 === License
 
 Copyright (c) 2007 James Coglan
