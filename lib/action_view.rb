@@ -7,14 +7,14 @@ module ActionView #:nodoc:
       end
       
       def tag_with_attribute_locking(name, options = nil)
-        options = (options || {}).update("disabled" => attribute_locked?)
+        options = (options || {}).update("disabled" => attribute_locked?) unless name.to_s == 'label'
         tag_without_attribute_locking(name, options)
       end
       alias_method(:tag_without_attribute_locking, :tag)
       alias_method(:tag, :tag_with_attribute_locking)
       
       def content_tag_with_attribute_locking(name, content_or_options_with_block = nil, options = nil, &block)
-        options = (options || {}).update("disabled" => attribute_locked?)
+        options = (options || {}).update("disabled" => attribute_locked?) unless name.to_s == 'label'
         content_tag_without_attribute_locking(name, content_or_options_with_block, options, &block)
       end
       alias_method(:content_tag_without_attribute_locking, :content_tag)
