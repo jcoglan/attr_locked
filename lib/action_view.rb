@@ -22,9 +22,9 @@ module ActionView #:nodoc:
       
     private
       
-      def date_or_time_select_with_attribute_locking(options)
+      def date_or_time_select_with_attribute_locking(options = {}, html_options = {})
         options[:disabled] = attribute_locked?
-        date_or_time_select_without_attribute_locking(options)
+        date_or_time_select_without_attribute_locking(options, html_options)
       end
       alias_method(:date_or_time_select_without_attribute_locking, :date_or_time_select)
       alias_method(:date_or_time_select, :date_or_time_select_with_attribute_locking)
